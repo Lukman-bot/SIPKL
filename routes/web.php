@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PenggunaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +36,10 @@ Route::middleware('auth')->group(function() {
     Route::get('/sekolah/form/{id}', [SekolahController::class, 'form']);
     Route::post('/sekolah', [SekolahController::class, 'store']);
     Route::get('/sekolah/delete/{id}', [SekolahController::class, 'destroy']);
+
+    Route::get('/pengguna', [PenggunaController::class, 'index']);
+    Route::get('/pengguna/form', [PenggunaController::class, 'form']);
+    Route::get('/pengguna/form/{id}', [PenggunaController::class, 'form']);
+    Route::post('/pengguna', [PenggunaController::class, 'store']);
+    Route::get('/pengguna/delete/{id}', [PenggunaController::class, 'destroy']);
 });
