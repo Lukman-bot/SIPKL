@@ -40,6 +40,12 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
+Setelah membuat konfigurasi database pada file .env, selanjutnya silahkan jalankan migrasi database, atau ikuti perintah berikut.
+
+```console
+php artisan migrate
+```
+
 Setelah itu, silahkan running aplikasinya menggunakan perintah berikut.
 
 ```console
