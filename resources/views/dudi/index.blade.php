@@ -2,14 +2,14 @@
 @section('views')
 @if (session()->has('success'))
 <div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    {{ session('success') }}
+ <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
+ {{ session('success') }}
 </div>
 @endif
 <div class="card">
     <div class="card-header">
         <div class="float-right">
-            <a class="btn btn-success" href="{{url("pengguna/form")}}">
+            <a class="btn btn-success" href="{{url("dudi/form")}}">
                 <i class="fa fa-plus"></i> Tambah
             </a>
         </div>
@@ -20,9 +20,12 @@
                 <thead>
                     <tr>
                         <th style="width: 5%;">No</th>
-                        <th>Username</th>
-                        <th>Nama Lengkap</th>
+                        <th>Nama Dudi</th>
                         <th>Alamat</th>
+                        <th>No. Telp</th>
+                        <th>Website</th>
+                        <th>Email</th>
+                        <th>Nama Pimpinan</th>
                         <th style="width: 5%;">Aksi</th>
                     </tr>
                 </thead>
@@ -30,15 +33,18 @@
                     @foreach ($data as $show)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$show->username}}</td>
-                            <td>{{$show->nama_lengkap}}</td>
+                            <td>{{$show->nama_dudi}}</td>
                             <td>{{$show->alamat}}</td>
+                            <td>{{$show->no_telp}}</td>
+                            <td>{{$show->website}}</td>
+                            <td>{{$show->email}}</td>
+                            <td>{{$show->nama_pimpinan}}</td>
                             <td>
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <a href="{{url("pengguna/form/" . base64_encode($show->id_pengguna))}}" class="btn btn-warning btn-sm">
+                                    <a href="{{url("dudi/form/" . base64_encode($show->id_dudi))}}" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <a href="{{url("pengguna/delete/" . base64_encode($show->id_pengguna))}}" class="btn btn-danger btn-sm ml-2">
+                                    <a href="{{url("dudi/delete/" . base64_encode($show->id_dudi))}}" class="btn btn-danger btn-sm ml-2">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                 </div>

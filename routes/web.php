@@ -7,6 +7,7 @@ use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\DudiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +43,10 @@ Route::middleware('auth')->group(function() {
     Route::get('/pengguna/form/{id}', [PenggunaController::class, 'form']);
     Route::post('/pengguna', [PenggunaController::class, 'store']);
     Route::get('/pengguna/delete/{id}', [PenggunaController::class, 'destroy']);
+
+    Route::get('/dudi', [DudiController::class, 'index']);
+    Route::get('/dudi/form', [DudiController::class, 'form']);
+    Route::get('/dudi/form/{id}', [DudiController::class, 'form']);
+    Route::post('/dudi', [DudiController::class, 'store']);
+    Route::get('/dudi/delete/{id}', [DudiController::class, 'destroy']);
 });

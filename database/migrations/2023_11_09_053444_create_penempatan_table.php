@@ -19,6 +19,12 @@ return new class extends Migration
                 ->on('dudi')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->unsignedBigInteger('id_pengguna');
+            $table->foreign('id_pengguna')
+                ->references('id_pengguna')
+                ->on('pengguna')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->date('tgl_mulai_pkl');
             $table->date('tgl_selesai_pkl')->nullable();
         });
