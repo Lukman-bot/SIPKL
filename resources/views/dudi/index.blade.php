@@ -2,8 +2,8 @@
 @section('views')
 @if (session()->has('success'))
 <div class="alert alert-success alert-dismissible">
- <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
- {{ session('success') }}
+    <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
+    {{ session('success') }}
 </div>
 @endif
 <div class="card">
@@ -43,6 +43,9 @@
                                 <div class="d-flex align-items-center justify-content-center">
                                     <a href="{{url("dudi/form/" . base64_encode($show->id_dudi))}}" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="{{url("dudi/detail/" . base64_encode($show->id_dudi))}}" class="btn btn-info btn-sm ml-2">
+                                        <i class="fa fa-eye"></i>
                                     </a>
                                     <a href="{{url("dudi/delete/" . base64_encode($show->id_dudi))}}" class="btn btn-danger btn-sm ml-2">
                                         <i class="fa fa-trash"></i>

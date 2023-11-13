@@ -49,4 +49,13 @@ Route::middleware('auth')->group(function() {
     Route::get('/dudi/form/{id}', [DudiController::class, 'form']);
     Route::post('/dudi', [DudiController::class, 'store']);
     Route::get('/dudi/delete/{id}', [DudiController::class, 'destroy']);
+    Route::get('/dudi/detail/{id}', [DudiController::class, 'detail']);
+    Route::get('/dudi/form-siswa/{id}', [DudiController::class, 'formSiswa']);
+    Route::get('/dudi/form-siswa/{id}/{id_penempatan}', [DudiController::class, 'formSiswa']);
+    Route::post('/save-siswa', [DudiController::class, 'saveSiswa']);
+    Route::get('/dudi/delete-siswa/{id}/{id_penempatan}', [DudiController::class, 'destroySiswa']);
+    Route::get('/dudi/form-pembimbing/{id}', [DudiController::class, 'formPembimbing']);
+    Route::get('/dudi/form-pembimbing/{id}/{id_pembimbing_dudi}', [DudiController::class, 'formPembimbing']);
+    Route::post('/save-pembimbing', [DudiController::class, 'savePembimbing']);
+    Route::get('/dudi/delete-pembimbing/{id}/{id_pembimbing_dudi}', [DudiController::class, 'destroyPembimbing']);
 });
