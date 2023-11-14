@@ -8,6 +8,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\DudiController;
+use App\Http\Controllers\DaftarHadirController;
+use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\AgendaController;
+use App\Http\Controllers\GambarKerjaController;
+use App\Http\Controllers\KonsultasiPembimbingDudiController;
+use App\Http\Controllers\KonsultasiPembimbingGuruController;
+use App\Http\Controllers\PenilaianController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,4 +65,18 @@ Route::middleware('auth')->group(function() {
     Route::get('/dudi/form-pembimbing/{id}/{id_pembimbing_dudi}', [DudiController::class, 'formPembimbing']);
     Route::post('/save-pembimbing', [DudiController::class, 'savePembimbing']);
     Route::get('/dudi/delete-pembimbing/{id}/{id_pembimbing_dudi}', [DudiController::class, 'destroyPembimbing']);
+
+    Route::get('daftar-hadir', [DaftarHadirController::class, 'index']);
+
+    Route::get('monitoring', [MonitoringController::class, 'index']);
+
+    Route::get('agenda', [AgendaController::class, 'index']);
+
+    Route::get('gambar-kerja', [GambarKerjaController::class, 'index']);
+
+    Route::get('konsultasi-pembimbing-dudi', [KonsultasiPembimbingDudiController::class, 'index']);
+
+    Route::get('konsultasi-pembimbing-guru', [KonsultasiPembimbingGuruController::class, 'index']);
+
+    Route::get('penilaian', [PenilaianController::class, 'index']);
 });

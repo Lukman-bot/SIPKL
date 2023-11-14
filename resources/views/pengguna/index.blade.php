@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\DB;
+@endphp
+
 @extends('template/template')
 @section('views')
 @if (session()->has('success'))
@@ -23,16 +27,23 @@
                         <th>Username</th>
                         <th>Nama Lengkap</th>
                         <th>Alamat</th>
+                        <th>Jenis Pengguna</th>
                         <th style="width: 5%;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($data as $show)
+                        @php
+                            $jenis_pengguna = DB::table('jenis_pengguna')
+                                ->where('id_jenis_pengguna', $show->id_jenis_pengguna)
+                                ->first();
+                        @endphp
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$show->username}}</td>
                             <td>{{$show->nama_lengkap}}</td>
                             <td>{{$show->alamat}}</td>
+                            <td>{{$jenis_pengguna->jenis_pengguna}}</td>
                             <td>
                                 <div class="d-flex align-items-center justify-content-center">
                                     <a href="{{url("pengguna/form/" . base64_encode($show->id_pengguna))}}" class="btn btn-warning btn-sm">

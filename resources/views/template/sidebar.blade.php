@@ -50,6 +50,138 @@
                             </li>
                         </ul>
                     </li>
+                @elseif (session()->get('id_jenis_pengguna') == 2)
+                    <li class="nav-item">
+                        <a href="{{url("dashboard")}}" class="nav-link {{ request()->segment(1) == "dashboard" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Dashboard
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("daftar-hadir")}}" class="nav-link {{ request()->segment(1) == "daftar-hadir" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <p>
+                                Daftar Hadir
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("monitoring")}}" class="nav-link {{ request()->segment(1) == "monitoring" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Monitoring
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("agenda")}}" class="nav-link {{ request()->segment(1) == "agenda" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p>
+                                Agenda
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("gambar-kerja")}}" class="nav-link {{ request()->segment(1) == "gambar-kerja" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-image"></i>
+                            <p>
+                                Gambar Kerja
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ||
+                        request()->segment(1) == "konsultasi-pembimbing-guru" ? "menu-open" : "" }}">
+                        <a href="#" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" || request()->segment(1) == "konsultasi-pembimbing-guru" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-envelope"></i>
+                            <p>
+                                Konsultasi
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{url("konsultasi-pembimbing-dudi")}}" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ? "active" : "" }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pembimbing DU/DI</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{url("konsultasi-pembimbing-guru")}}" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-guru" ? "active" : "" }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pembimbing Guru</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("penilaian")}}" class="nav-link {{ request()->segment(1) == "penilaian" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-chart-pie"></i>
+                            <p>
+                                Penilaian
+                            </p>
+                        </a>
+                    </li>
+                @elseif (session()->get('id_jenis_pengguna') == 3)
+                <li class="nav-item">
+                        <a href="{{url("dashboard")}}" class="nav-link {{ request()->segment(1) == "dashboard" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Dashboard
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("daftar-hadir")}}" class="nav-link {{ request()->segment(1) == "daftar-hadir" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <p>
+                                Daftar Hadir
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("agenda")}}" class="nav-link {{ request()->segment(1) == "agenda" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p>
+                                Agenda
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("gambar-kerja")}}" class="nav-link {{ request()->segment(1) == "gambar-kerja" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-image"></i>
+                            <p>
+                                Gambar Kerja
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ||
+                        request()->segment(1) == "konsultasi-pembimbing-guru" ? "menu-open" : "" }}">
+                        <a href="#" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" || request()->segment(1) == "konsultasi-pembimbing-guru" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-envelope"></i>
+                            <p>
+                                Konsultasi
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{url("konsultasi-pembimbing-dudi")}}" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ? "active" : "" }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pembimbing DU/DI</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{url("penilaian")}}" class="nav-link {{ request()->segment(1) == "penilaian" ? "active" : "" }}">
+                            <i class="nav-icon fas fa-chart-pie"></i>
+                            <p>
+                                Penilaian
+                            </p>
+                        </a>
+                    </li>
                 @endif
             </ul>
         </nav>
