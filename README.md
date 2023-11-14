@@ -1,4 +1,10 @@
-# Tutorial Instalasi Web SIPKL (Sistem Informasi Praktek Kerja Lapangan)
+# Aplikasi SIPKL (Sistem Informasi Praktek Kerja Lapangan)
+
+## Overview Aplikasi
+
+Aplikasi ini merupakan <i>Web Based Application</i>. Aplikasi ini di bangun menggunakan <b>Framework</b> [Laravel](https://laravel.com/docs/10.x/releases) versi 10.
+
+Aplikasi ini dibangun bertujuan untuk membuat sistem yang akan mengelola data <i>Praktek Kerja Lapangan</i> dari siswa yang bersekolah di <b>SMK Daarul Abroor</b>.
 
 Silahkan ikuti langkah berikut untuk menjalankan website ini pada perangkat Anda.
 
