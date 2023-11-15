@@ -1,81 +1,218 @@
-# SIPKL (Sistem Informasi Praktek Kerja Lapangan)
-
-## Overview Aplikasi
-
-Aplikasi ini merupakan <i>Web Based Application</i>. Aplikasi ini di bangun menggunakan <b>Framework</b> <a href="https://laravel.com/docs/10.x/releases" target="_blank">Laravel</a> versi 10.
-
-Aplikasi ini dibangun bertujuan untuk membuat sistem yang akan mengelola data <i>Praktek Kerja Lapangan</i> dari siswa yang bersekolah di <b>SMK Daarul Abroor</b>.
-
-## Tutorial Penginstalan Aplikasi
-
-Ada beberapa hal yang harus dipersiapkan untuk menjalankan aplikasi ini. Beberapa aplikasi lain yang sudah harus Anda siapkan di antaranya adalah:
-* <a href="https://www.apachefriends.org/" target="_blank">Xampp</a> dengan versi php >8.2
-* <a href="https://getcomposer.org/" target="_blank">Composer</a>
-
-Untuk tata cara penginstalan aplikasi, silahkan Anda ikuti langkah berikut untuk menjalankan aplikasi ini pada perangkat Anda.
-
-Langkah pertama, silahkan download atau clone source ini pada perangkat Anda.
-
-Selanjutnya, extract source code ini pada folder:
+## langkah-langkah menu Agenda
 
 ```console
-C:\xampp\htdocs
+php artisan make:migration create_agenda_table
 ```
 
-Setelah selesai mengextract, silahkan buka folder source code-nya pada Visual Studio Code.
-Selanjutnya, silahkan buka terminal Visual Studio Code, kemudian jalankan perintah berikut.
-
+lanjut buat model untuk agenda dengan perintah berikut
 ```console
-composer update
+php artisan make:model Agenda
 ```
 
-Jika sudah selesai, maka lanjut ke perintah berikut.
-
+isikan kode berikut pada mode Agenda Anda
 ```console
-cp .env.example .env
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Agenda extends Model
+{
+    use HasFactory;
+    protected $table = 'agenda';
+    protected $primaryKey = 'id_agenda';
+    protected $guarded = ['id_agenda'];
+    public $timestamps = false;
+}
 ```
 
-Selanjutnya, silahkan generate kunci aplikasi laravel menggunakan perintah berikut.
-
+buat file migrasi
 ```console
-php artisan key:generate
+php artisan make:migration create_agenda_table
 ```
 
-Selanjutnya, silahkan buka file .env, kemudian cari bagian konfigurasi database. Ubah konfigurasinya menjadi seperti berikut.
-
+isikan file migrasi tersebut dengan kode berikut
 ```console
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=db_sip_pkl
-DB_USERNAME=root
-DB_PASSWORD=
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('agenda', function (Blueprint $table) {
+            $table->id('id_agenda');
+            $table->date('tgl_agenda');
+            $table->text('uraian_kegiatan');
+            $table->unsignedBigInteger('id_penempatan');
+            $table->foreign('id_penempatan')
+                ->references('id_penempatan')
+                ->on('penempatan')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('agenda');
+    }
+};
 ```
 
-Setelah membuat konfigurasi database pada file .env, selanjutnya silahkan jalankan migrasi database, atau ikuti perintah berikut.
-
+sesuaikan file AgendaController.php menjadi seperti berikut
 ```console
-php artisan migrate
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Agenda;
+
+class AgendaController extends Controller
+{
+    public function __construct()
+    {
+        $this->model = new Agenda();
+    }
+
+    public function index()
+    {
+        $data = [
+            'title' => 'Data Agenda',
+            'data' => Agenda::all()
+        ];
+        
+        return view('agenda.index', $data);
+    }
+
+    public function form($id = null)
+    {
+        $penempatan = DB::table('penempatan')->where('id_pengguna', session()->get('id_pengguna'))->first();
+        if (!$penempatan) {
+            return redirect('agenda')->with('error', 'Anda belum ditambahkan kedalam DU/DI. Silahkan hubungi Admin');
+        }
+        
+        $data = [
+            'title' => 'Form Agenda Harian',
+            'data' => $this->model->find(base64_decode($id)),
+            'id_penempatan' => $penempatan->id_penempatan
+        ];
+
+        return view('agenda.form', $data);
+    }
+
+    public function store(Request $request)
+    {
+        $id = $request->get('id');
+
+        $validate = $request->validate([
+            'tgl_agenda' => ['required'],
+            'uraian_kegiatan' => ['required'],
+            'id_penempatan' => ['required']
+        ]);
+
+        if ($id == null) {
+            $this->model->insert($validate);
+            return redirect('agenda')->with('success', 'Berhasil menyimpan data agenda');
+        } else {
+            $this->model->where('id_agenda', $id)->update($validate);
+            return redirect('agenda')->with('success', 'Berhasil memperbarui data agenda');
+        }
+    }
+
+    public function destroy($id)
+    {
+        $this->model->where('id_agenda', base64_decode($id))->delete();
+
+        return redirect('agenda')->with('success', 'Berhasil menghapus data agenda');
+    }
+}
 ```
 
-Setelah itu, silahkan running aplikasinya menggunakan perintah berikut.
-
+edit file index.blade.php pada folder Agenda menjadi seperti berikut
 ```console
-php artisan serve
+@extends('template/template')
+@section('views')
+@if (session()->has('success'))
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
+    {{ session('success') }}
+</div>
+@elseif (session()->has('error'))
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
+    {{ session('error') }}
+</div>
+@endif
+<div class="card">
+    <div class="card-header">
+        <div class="float-right">
+            <a class="btn btn-success" href="{{url("agenda/form")}}">
+                <i class="fa fa-plus"></i> Tambah
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">No</th>
+                        <th>Tgl. Agenda</th>
+                        <th>Uraian Kegiatan</th>
+                        <th style="width: 5%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data as $show)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$show->tgl_agenda}}</td>
+                            <td>{{$show->uraian_kegiatan}}</td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <a href="{{url("agenda/form/" . base64_encode($show->id_agenda))}}" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="{{url("agenda/delete/" . base64_encode($show->id_agenda))}}" class="btn btn-danger btn-sm ml-2">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
 ```
 
-
-## Script Form Daftar Hadir
+buat file form.blade.php pada folder Agenda, dan masukkan kode berikut
 ```console
 @extends('template/template')
 @section('views')
 <div class="row">
     <div class="col-lg-8">
-        <form action="{{url("daftar-hadir")}}" method="post">
+        <form action="{{url("agenda")}}" method="post">
             @csrf
             <div class="card">
                 <div class="card-header">
-                    <a href="{{url("daftar-hadir")}}" class="btn btn-warning">
+                    <a href="{{url("agenda")}}" class="btn btn-warning">
                         <i class="fas fa-angle-left"></i> Kembali
                     </a>
                     <button type="submit" class="btn btn-success float-right">
@@ -83,39 +220,21 @@ php artisan serve
                     </button>
                 </div>
                 <div class="card-body">
-                    <input type="hidden" name="id" value="{{@$data['id_daftar_hadir']}}">
+                    <input type="hidden" name="id" value="{{@$data['id_agenda']}}">
                     <input type="hidden" name="id_penempatan" value="{{$id_penempatan}}">
                     <div class="form-group">
-                        <label for="">Tgl. Kehadiran</label>
-                        <input type="date" class="form-control" name="tgl_kehadiran" required value="{{old('tgl_kehadiran', @$data['tgl_kehadiran'])}}">
-                        @error('tgl_kehadiran')
+                        <label for="">Tgl. Agenda</label>
+                        <input type="date" class="form-control" name="tgl_agenda" required value="{{old('tgl_agenda', @$data['tgl_agenda'])}}">
+                        @error('tgl_agenda')
                         <div class="text-danger">
                             {{$message}}
                         </div>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="">Keterangan</label>
-                        <input type="text" class="form-control" name="keterangan" placeholder="Masukkan keterangan kehadiran" required value="{{old('keterangan', @$data['keterangan'])}}">
-                        @error('keterangan')
-                        <div class="text-danger">
-                            {{$message}}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="">Jam Datang</label>
-                        <input type="text" class="form-control" name="jam_datang" placeholder="Masukkan jam datang kehadiran" required value="{{old('jam_datang', @$data['jam_datang'])}}">
-                        @error('jam_datang')
-                        <div class="text-danger">
-                            {{$message}}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="">Jam Pulang</label>
-                        <input type="text" class="form-control" name="jam_pulang" placeholder="Masukkan Jam Pulang kehadiran" required value="{{old('jam_pulang', @$data['jam_pulang'])}}">
-                        @error('jam_pulang')
+                        <label for="">Uraian Kegiatan</label>
+                        <input type="text" class="form-control" name="uraian_kegiatan" placeholder="Masukkan uraian kegiatan" required value="{{old('uraian_kegiatan', @$data['uraian_kegiatan'])}}">
+                        @error('uraian_kegiatan')
                         <div class="text-danger">
                             {{$message}}
                         </div>
@@ -127,4 +246,9 @@ php artisan serve
     </div>
 </div>
 @endsection
+```
+
+terakhir, sesuaikan file Routes/web.php menjadi seperti berikut.
+```console
+
 ```
