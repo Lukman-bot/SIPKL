@@ -1,9 +1,5 @@
 ## langkah-langkah menu Agenda
 
-```console
-php artisan make:migration create_agenda_table
-```
-
 lanjut buat model untuk agenda dengan perintah berikut
 ```console
 php artisan make:model Agenda
