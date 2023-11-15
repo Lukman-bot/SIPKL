@@ -65,43 +65,23 @@ php artisan serve
 ```
 
 
-## Script Migrasi Tabel Daftar Hadir
+## Script Model DaftarHadir
 ```console
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models;
 
-return new class extends Migration
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class DaftarHadir extends Model
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('daftar_hadir', function (Blueprint $table) {
-            $table->id('id_daftar_hadir');
-            $table->date('tgl_kehadiran');
-            $table->text('keterangan');
-            $table->string('jam_datang');
-            $table->string('jam_pulang');
-            $table->unsignedBigInteger('id_penempatan');
-            $table->foreign('id_penempatan')
-                ->references('id_penempatan')
-                ->on('penempatan')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-        });
-    }
+    use HasFactory;
+    protected $table = 'daftar_hadir';
+    protected $primaryKey = 'id_daftar_hadir';
+    protected $guarded = ['id_daftar_hadir'];
+    public $timestamps = false;
+}
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('daftar_hadir');
-    }
-};
 
 ```
