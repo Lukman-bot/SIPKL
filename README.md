@@ -65,112 +65,66 @@ php artisan serve
 ```
 
 
-## Script View Daftar Hadir
+## Script Form Daftar Hadir
 ```console
 @extends('template/template')
 @section('views')
-@if (session()->has('success'))
-<div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
-    {{ session('success') }}
-</div>
-@elseif (session()->has('error'))
-<div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
-    {{ session('error') }}
-</div>
-@endif
-<div class="card">
-    <div class="card-header">
-        <div class="float-right">
-            <a class="btn btn-success" href="{{url("daftar-hadir/form")}}">
-                <i class="fa fa-plus"></i> Tambah
-            </a>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th style="width: 5%;">No</th>
-                        <th>Tgl. Hadir</th>
-                        <th>Jam Datang</th>
-                        <th>Jam Pulang</th>
-                        <th>Keterangan</th>
-                        <th style="width: 5%;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($data as $show)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$show->tgl_kehadiran}}</td>
-                            <td>{{$show->jam_datang}}</td>
-                            <td>{{$show->jam_pulang}}</td>
-                            <td>{{$show->keterangan}}</td>
-                            <td>
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <a href="{{url("daftar-hadir/form/" . base64_encode($show->id_daftar_hadir))}}" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="{{url("daftar-hadir/delete/" . base64_encode($show->id_daftar_hadir))}}" class="btn btn-danger btn-sm ml-2">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+<div class="row">
+    <div class="col-lg-8">
+        <form action="{{url("daftar-hadir")}}" method="post">
+            @csrf
+            <div class="card">
+                <div class="card-header">
+                    <a href="{{url("daftar-hadir")}}" class="btn btn-warning">
+                        <i class="fas fa-angle-left"></i> Kembali
+                    </a>
+                    <button type="submit" class="btn btn-success float-right">
+                        <i class="fa fa-save"></i> Simpan
+                    </button>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="id" value="{{@$data['id_daftar_hadir']}}">
+                    <input type="hidden" name="id_penempatan" value="{{$id_penempatan}}">
+                    <div class="form-group">
+                        <label for="">Tgl. Kehadiran</label>
+                        <input type="date" class="form-control" name="tgl_kehadiran" required value="{{old('tgl_kehadiran', @$data['tgl_kehadiran'])}}">
+                        @error('tgl_kehadiran')
+                        <div class="text-danger">
+                            {{$message}}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="">Keterangan</label>
+                        <input type="text" class="form-control" name="keterangan" placeholder="Masukkan keterangan kehadiran" required value="{{old('keterangan', @$data['keterangan'])}}">
+                        @error('keterangan')
+                        <div class="text-danger">
+                            {{$message}}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="">Jam Datang</label>
+                        <input type="text" class="form-control" name="jam_datang" placeholder="Masukkan jam datang kehadiran" required value="{{old('jam_datang', @$data['jam_datang'])}}">
+                        @error('jam_datang')
+                        <div class="text-danger">
+                            {{$message}}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="">Jam Pulang</label>
+                        <input type="text" class="form-control" name="jam_pulang" placeholder="Masukkan Jam Pulang kehadiran" required value="{{old('jam_pulang', @$data['jam_pulang'])}}">
+                        @error('jam_pulang')
+                        <div class="text-danger">
+                            {{$message}}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 @endsection
-```
-
-## Script Controller DaftarHadir
-```console
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\DaftarHadir;
-
-class DaftarHadirController extends Controller
-{
-    public function __construct()
-    {
-        $this->model = new DaftarHadir();
-    }
-
-    public function index()
-    {
-        $data = [
-            'title' => 'Daftar Hadir',
-            'data' => DaftarHadir::all()
-        ];
-        
-        return view('daftarhadir.index', $data);
-    }
-
-    public function form($id = null)
-    {
-        $penempatan = DB::table('penempatan')->where('id_pengguna', session()->get('id_pengguna'))->first();
-        if (!$penempatan) {
-            return redirect('daftar-hadir')->with('error', 'Anda belum ditambahkan kedalam DU/DI. Silahkan hubungi Admin');
-        }
-        
-        $data = [
-            'title' => 'Form Daftar Hadir',
-            'data' => $this->model->find(base64_decode($id)),
-            'id_penempatan' => $penempatan->id_penempatan
-        ];
-
-        return view('daftarhadir.index', $data);
-    }
-}
-
 ```
