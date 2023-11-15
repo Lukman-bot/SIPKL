@@ -65,23 +65,23 @@ php artisan serve
 ```
 
 
-## Script Model DaftarHadir
+## Script Class DaftarHadirController
 ```console
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class DaftarHadir extends Model
+class DaftarHadirController extends Controller
 {
-    use HasFactory;
-    protected $table = 'daftar_hadir';
-    protected $primaryKey = 'id_daftar_hadir';
-    protected $guarded = ['id_daftar_hadir'];
-    public $timestamps = false;
+    public function __construct()
+    {
+        $this->model = new DaftarHadir();
+    }
+
+    public function index()
+    {
+        $data = [
+            'title' => 'Daftar Hadir',
+            'data' => DaftarHadir::all()
+        ];
+        
+        return view('daftarhadir.index', $data);
+    }
 }
-
-
 ```
