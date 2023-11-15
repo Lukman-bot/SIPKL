@@ -65,92 +65,112 @@ php artisan serve
 ```
 
 
-## Script Routes web.php
+## Script View Daftar Hadir
+```console
+@extends('template/template')
+@section('views')
+@if (session()->has('success'))
+<div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
+    {{ session('success') }}
+</div>
+@elseif (session()->has('error'))
+<div class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" ariahidden="true">&times;</button>
+    {{ session('error') }}
+</div>
+@endif
+<div class="card">
+    <div class="card-header">
+        <div class="float-right">
+            <a class="btn btn-success" href="{{url("daftar-hadir/form")}}">
+                <i class="fa fa-plus"></i> Tambah
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">No</th>
+                        <th>Tgl. Hadir</th>
+                        <th>Jam Datang</th>
+                        <th>Jam Pulang</th>
+                        <th>Keterangan</th>
+                        <th style="width: 5%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data as $show)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$show->tgl_kehadiran}}</td>
+                            <td>{{$show->jam_datang}}</td>
+                            <td>{{$show->jam_pulang}}</td>
+                            <td>{{$show->keterangan}}</td>
+                            <td>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <a href="{{url("daftar-hadir/form/" . base64_encode($show->id_daftar_hadir))}}" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="{{url("daftar-hadir/delete/" . base64_encode($show->id_daftar_hadir))}}" class="btn btn-danger btn-sm ml-2">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
+```
+
+## Script Controller DaftarHadir
 ```console
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\SekolahController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PenggunaController;
-use App\Http\Controllers\DudiController;
-use App\Http\Controllers\DaftarHadirController;
-use App\Http\Controllers\MonitoringController;
-use App\Http\Controllers\AgendaController;
-use App\Http\Controllers\GambarKerjaController;
-use App\Http\Controllers\KonsultasiPembimbingDudiController;
-use App\Http\Controllers\KonsultasiPembimbingGuruController;
-use App\Http\Controllers\PenilaianController;
+namespace App\Http\Controllers;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\DaftarHadir;
 
-Route::get('/', [AuthController::class, 'index']);
-Route::post('/', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+class DaftarHadirController extends Controller
+{
+    public function __construct()
+    {
+        $this->model = new DaftarHadir();
+    }
 
-Route::middleware('auth')->group(function() {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    public function index()
+    {
+        $data = [
+            'title' => 'Daftar Hadir',
+            'data' => DaftarHadir::all()
+        ];
+        
+        return view('daftarhadir.index', $data);
+    }
 
-    Route::get('/products', [ProductController::class, 'index']);
+    public function form($id = null)
+    {
+        $penempatan = DB::table('penempatan')->where('id_pengguna', session()->get('id_pengguna'))->first();
+        if (!$penempatan) {
+            return redirect('daftar-hadir')->with('error', 'Anda belum ditambahkan kedalam DU/DI. Silahkan hubungi Admin');
+        }
+        
+        $data = [
+            'title' => 'Form Daftar Hadir',
+            'data' => $this->model->find(base64_decode($id)),
+            'id_penempatan' => $penempatan->id_penempatan
+        ];
 
-    Route::get('/tasks', 'App\Http\Controllers\TaskController@index');
-    Route::post('/tasks', 'App\Http\Controllers\TaskController@store');
-    
-    Route::get('/sekolah', [SekolahController::class, 'index']);
-    Route::get('/sekolah/form', [SekolahController::class, 'form']);
-    Route::get('/sekolah/form/{id}', [SekolahController::class, 'form']);
-    Route::post('/sekolah', [SekolahController::class, 'store']);
-    Route::get('/sekolah/delete/{id}', [SekolahController::class, 'destroy']);
+        return view('daftarhadir.index', $data);
+    }
+}
 
-    Route::get('/pengguna', [PenggunaController::class, 'index']);
-    Route::get('/pengguna/form', [PenggunaController::class, 'form']);
-    Route::get('/pengguna/form/{id}', [PenggunaController::class, 'form']);
-    Route::post('/pengguna', [PenggunaController::class, 'store']);
-    Route::get('/pengguna/delete/{id}', [PenggunaController::class, 'destroy']);
-
-    Route::get('/dudi', [DudiController::class, 'index']);
-    Route::get('/dudi/form', [DudiController::class, 'form']);
-    Route::get('/dudi/form/{id}', [DudiController::class, 'form']);
-    Route::post('/dudi', [DudiController::class, 'store']);
-    Route::get('/dudi/delete/{id}', [DudiController::class, 'destroy']);
-    Route::get('/dudi/detail/{id}', [DudiController::class, 'detail']);
-    Route::get('/dudi/form-siswa/{id}', [DudiController::class, 'formSiswa']);
-    Route::get('/dudi/form-siswa/{id}/{id_penempatan}', [DudiController::class, 'formSiswa']);
-    Route::post('/save-siswa', [DudiController::class, 'saveSiswa']);
-    Route::get('/dudi/delete-siswa/{id}/{id_penempatan}', [DudiController::class, 'destroySiswa']);
-    Route::get('/dudi/form-pembimbing/{id}', [DudiController::class, 'formPembimbing']);
-    Route::get('/dudi/form-pembimbing/{id}/{id_pembimbing_dudi}', [DudiController::class, 'formPembimbing']);
-    Route::post('/save-pembimbing', [DudiController::class, 'savePembimbing']);
-    Route::get('/dudi/delete-pembimbing/{id}/{id_pembimbing_dudi}', [DudiController::class, 'destroyPembimbing']);
-
-    Route::get('daftar-hadir', [DaftarHadirController::class, 'index']);
-    Route::get('/daftar-hadir/form', [DaftarHadirController::class, 'form']);
-    Route::get('/daftar-hadir/form/{id}', [DaftarHadirController::class, 'form']);
-    Route::post('/daftar-hadir', [DaftarHadirController::class, 'store']);
-    Route::get('/daftar-hadir/delete/{id}', [DaftarHadirController::class, 'destroy']);
-
-    Route::get('monitoring', [MonitoringController::class, 'index']);
-
-    Route::get('agenda', [AgendaController::class, 'index']);
-
-    Route::get('gambar-kerja', [GambarKerjaController::class, 'index']);
-
-    Route::get('konsultasi-pembimbing-dudi', [KonsultasiPembimbingDudiController::class, 'index']);
-
-    Route::get('konsultasi-pembimbing-guru', [KonsultasiPembimbingGuruController::class, 'index']);
-
-    Route::get('penilaian', [PenilaianController::class, 'index']);
-});
 ```
