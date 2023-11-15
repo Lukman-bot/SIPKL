@@ -65,7 +65,7 @@ php artisan serve
 ```
 
 
-## Script Migrasi Tabel Pembimbing DU/DI
+## Script Migrasi Tabel Daftar Hadir
 ```console
 <?php
 
@@ -80,18 +80,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pembimbing_guru', function (Blueprint $table) {
-            $table->id('id_pembimbing_guru');
-            $table->unsignedBigInteger('id_dudi');
-            $table->foreign('id_dudi')
-                ->references('id_dudi')
-                ->on('dudi')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedBigInteger('id_pengguna');
-            $table->foreign('id_pengguna')
-                ->references('id_pengguna')
-                ->on('pengguna')
+        Schema::create('daftar_hadir', function (Blueprint $table) {
+            $table->id('id_daftar_hadir');
+            $table->date('tgl_kehadiran');
+            $table->text('keterangan');
+            $table->string('jam_datang');
+            $table->string('jam_pulang');
+            $table->unsignedBigInteger('id_penempatan');
+            $table->foreign('id_penempatan')
+                ->references('id_penempatan')
+                ->on('penempatan')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
@@ -102,7 +100,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pembimbing_guru');
+        Schema::dropIfExists('daftar_hadir');
     }
 };
 
