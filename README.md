@@ -65,7 +65,45 @@ php artisan serve
 ```
 
 
-## Script Controller DU/DI
+## Script Migrasi Tabel Pembimbing DU/DI
 ```console
-'pembimbingGuru' => DB::table('pembimbing_guru')->leftJoin('pengguna', 'pengguna.id_pengguna', '=','pembimbing_guru.id_pengguna')->where('pembimbing_guru.id_dudi', base64_decode($id))->first()
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('pembimbing_guru', function (Blueprint $table) {
+            $table->id('id_pembimbing_guru');
+            $table->unsignedBigInteger('id_dudi');
+            $table->foreign('id_dudi')
+                ->references('id_dudi')
+                ->on('dudi')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedBigInteger('id_pengguna');
+            $table->foreign('id_pengguna')
+                ->references('id_pengguna')
+                ->on('pengguna')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('pembimbing_guru');
+    }
+};
+
 ```
