@@ -65,37 +65,48 @@ php artisan serve
 ```
 
 
-## script controller dudi
+## script view formtambahsiswa.blade.php
 ```console
-    public function formNilai($id, $id_penempatan = null)
-    {
-        $data = [
-            'data' => $this->penempatan->find(base64_decode($id_penempatan)),
-            'id_dudi' => base64_decode($id),
-            'title' => 'Form Tambah Nilai Siswa'
-        ];
-
-        return view('dudi.formtambahnilai', $data);
-    }
-
-    public function saveNilai(Request $request)
-    {
-        $id = $request->get('id');
-        $id_dudi = $request->get('id_dudi');
-
-        $validate = $request->validate([
-            'nilai_angka' => ['required'],
-            'nilai_mutu' => ['required']
-        ]);
-
-        if ($id == null) {
-            $this->penempatan->insert($validate);
-
-            return redirect('dudi/detail/' . base64_encode($id_dudi))->with('success', 'Berhasil menambahkan nilai siswa');
-        } else {
-            $this->penempatan->where('id_penempatan', $id)->update($validate);
-
-            return redirect('dudi/detail/' . base64_encode($id_dudi))->with('success', 'Berhasil memperbarui nilai siswa');
-        }
-    }
+@extends('template/template')
+@section('views')
+<div class="row">
+    <div class="col-lg-8">
+        <form action="{{url("save-nilai")}}" method="post">
+            @csrf
+            <div class="card">
+                <div class="card-header">
+                    <a href="{{url("dudi/detail/" . base64_encode($id_dudi))}}" class="btn btn-warning">
+                        <i class="fas fa-angle-left"></i> Kembali
+                    </a>
+                    <button type="submit" class="btn btn-success float-right">
+                        <i class="fa fa-save"></i> Simpan
+                    </button>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="id" value="{{@$data['id_penempatan']}}">
+                    <input type="hidden" name="id_dudi" value="{{$id_dudi}}">
+                    <div class="form-group">
+                        <label for="">Nilai Angka</label>
+                        <input type="number" class="form-control" name="nilai_angka" value="{{old('nilai_angka', @$data['nilai_angka'])}}" placeholder="Masukkan nilai angka siswa">
+                        @error('nilai_angka')
+                        <div class="text-danger">
+                            {{$message}}
+                        </div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nilai Mutu</label>
+                        <input type="number" class="form-control" name="nilai_mutu" value="{{old('nilai_mutu', @$data['nilai_mutu'])}}" placeholder="Masukkan Nilai Mutu siswa">
+                        @error('nilai_mutu')
+                        <div class="text-danger">
+                            {{$message}}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
 ```
