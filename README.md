@@ -84,8 +84,8 @@ php artisan serve
         $id_dudi = $request->get('id_dudi');
 
         $validate = $request->validate([
-            'id_pengguna' => ['required'],
-            'tgl_mulai_pkl' => ['required']
+            'nilai_angka' => ['required'],
+            'nilai_mutu' => ['required']
         ]);
 
         if ($id == null) {
