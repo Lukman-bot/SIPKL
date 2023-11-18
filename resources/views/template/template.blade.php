@@ -27,45 +27,44 @@
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{url("")}}/assets/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-        </div>
 
+        <!-- Topbar -->
         @include('template/topbar')
 
+        <!-- Sidebar -->
         @include('template/sidebar')
 
+        <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">{{$title}}</h1>
-                        </div>
+                            <h1 class="m-0 text-dark">{{ $title }}</h1>
+                        </div><!-- /.col -->
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="javascript:void(0)">{{$title}}</a></li>
+                                <li class="breadcrumb-item"><a href="javascript:void(0)">{{ $title }}</a></li>
                             </ol>
-                        </div>
-                    </div>
-                </div>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
             </div>
-
-            <section class="content">
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <div class="content">
                 <div class="container-fluid">
                     @yield('views')
                 </div>
-            </section>
-        </div>
-
-        <footer class="main-footer">
-            <strong>Copyright &copy; 2023 <a href="#">Lukman</a>.</strong>
-            All rights reserved.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.2.0
             </div>
-        </footer>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        @include('template/footer')
     </div>
+    <!-- ./wrapper -->
 
     <!-- jQuery -->
     <script src="{{ url('') }}/assets/plugins/jquery/jquery.min.js"></script>
