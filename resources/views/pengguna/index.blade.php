@@ -60,7 +60,17 @@
         table = $('#table').DataTable({
             processing: true,
             serverSide: true,
+            retrieve: true,
+            destroy: true,
+            order: [],
             searching: false,
+            entries: false,
+            bLengthChange: false,
+            ordering: false,
+            language: {
+				infoFiltered: "",
+				sZeroRecords: "Data Pengguna Tidak Ditemukan",
+			},
             ajax: {
                 url: '{!! route('pengguna.listData') !!}',
                 method: 'post',
