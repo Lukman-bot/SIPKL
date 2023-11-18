@@ -25,174 +25,94 @@
 
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                @if (session()->get('id_jenis_pengguna') == 1)
+                @php
+
+                switch (session()->get('id_jenis_pengguna')) {
+                    case 1:
+                        include(resource_path('views/menu/menu_admin.php'));
+                        break;
+                }
+
+                foreach ($arr_menu as $menu) {
+                    if ($menu['has_sub']) {
+                @endphp
+                        <li class="nav-item has-treeview" id="{{ str_replace(' ', '', str_replace('.', '', strtolower($menu['text']))) }}">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon {{ $menu['icon'] }}"></i>
+                                <p>
+                                    {{ $menu['text'] }}
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @foreach ($menu['sub_menu'] as $submenu)
+                                    @if ($submenu['has_sub'])
+                                        <li class="nav-item {{ str_replace(' ', '', str_replace('.', '', strtolower($menu['text']))) }} has-treeview" id="{{ str_replace(' ', '', str_replace('.', '', strtolower($submenu['text']))) }}">
+                                            <a href="#" class="nav-link">
+                                                <i class="nav-icon {{ $submenu['icon'] }}"></i>
+                                                <p>
+                                                    {{ $submenu['text'] }}
+                                                    <i class="right fas fa-angle-left"></i>
+                                                </p>
+                                            </a>
+                                            <ul class="nav nav-treeview">
+                                                @foreach ($submenu['sub_menu'] as $submenuagain)
+                                                    <li class="nav-item {{ str_replace(' ', '', str_replace('.', '', strtolower($submenu['text']))) }}" id="{{ $submenuagain['url'] }}_">
+                                                        <a href="{{ url($submenuagain['url']) }}" data-toggle="tooltip" data-placement="bottom" title="{{ $submenuagain['text'] }}" class="nav-link {{ $submenuagain['url'] == request()->segment(1) ? 'active' : '' }}">
+                                                            <i class="nav-icon {{ $submenuagain['icon'] }}"></i>
+                                                            <p>{{ $submenuagain['text'] }}</p>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+                                    @else
+                                        <li class="nav-item {{ str_replace(' ', '', str_replace('.', '', strtolower($menu['text']))) }}" id="{{ $submenu['url'] }}_">
+                                            <a href="{{ url($submenu['url']) }}" data-toggle="tooltip" data-placement="bottom" title="{{ $submenu['text'] }}" class="nav-link {{ $submenu['url'] == request()->segment(1) ? "active" : "" }}">
+                                                <i class="nav-icon {{ $submenu['icon'] }}"></i>
+                                                <p>{{ $submenu['text'] }}</p>
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
+                        </li>
+                @php
+                    } else {
+                @endphp
                     <li class="nav-item">
-                        <a href="{{url("dashboard")}}" class="nav-link {{ request()->segment(1) == "dashboard" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
+                        <a href="{{ url($menu['url']) }}" class="nav-link {{ $menu['url'] == request()->segment(1) ? "active" : "" }}">
+                            <i class="nav-icon {{ $menu['icon'] }}"></i>
+                            <p>{{ $menu['text'] }}</p>
                         </a>
                     </li>
-                    <li class="nav-item {{ request()->segment(1) == "pengguna" ||
-                        request()->segment(1) == "dudi" ? "menu-open" : "" }}">
-                        <a href="#" class="nav-link {{ request()->segment(1) == "pengguna" ||
-                            request()->segment(1) == "dudi" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-database"></i>
-                            <p>
-                                Master
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{url("pengguna")}}" class="nav-link {{ request()->segment(1) == "pengguna" ? "active" : "" }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pengguna</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{url("dudi")}}" class="nav-link {{ request()->segment(1) == "dudi" ? "active" : "" }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Dudi</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                @elseif (session()->get('id_jenis_pengguna') == 2)
-                    <li class="nav-item">
-                        <a href="{{url("dashboard")}}" class="nav-link {{ request()->segment(1) == "dashboard" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("daftar-hadir")}}" class="nav-link {{ request()->segment(1) == "daftar-hadir" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-edit"></i>
-                            <p>
-                                Daftar Hadir
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("monitoring")}}" class="nav-link {{ request()->segment(1) == "monitoring" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-th"></i>
-                            <p>
-                                Monitoring
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("agenda")}}" class="nav-link {{ request()->segment(1) == "agenda" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>
-                                Agenda
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("gambar-kerja")}}" class="nav-link {{ request()->segment(1) == "gambar-kerja" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-image"></i>
-                            <p>
-                                Gambar Kerja
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ||
-                        request()->segment(1) == "konsultasi-pembimbing-guru" ? "menu-open" : "" }}">
-                        <a href="#" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" || request()->segment(1) == "konsultasi-pembimbing-guru" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-envelope"></i>
-                            <p>
-                                Konsultasi
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{url("konsultasi-pembimbing-dudi")}}" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ? "active" : "" }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pembimbing DU/DI</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{url("konsultasi-pembimbing-guru")}}" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-guru" ? "active" : "" }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pembimbing Guru</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("penilaian")}}" class="nav-link {{ request()->segment(1) == "penilaian" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p>
-                                Penilaian
-                            </p>
-                        </a>
-                    </li>
-                @elseif (session()->get('id_jenis_pengguna') == 3)
-                <li class="nav-item">
-                        <a href="{{url("dashboard")}}" class="nav-link {{ request()->segment(1) == "dashboard" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("daftar-hadir")}}" class="nav-link {{ request()->segment(1) == "daftar-hadir" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-edit"></i>
-                            <p>
-                                Daftar Hadir
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("agenda")}}" class="nav-link {{ request()->segment(1) == "agenda" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                            <p>
-                                Agenda
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("gambar-kerja")}}" class="nav-link {{ request()->segment(1) == "gambar-kerja" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-image"></i>
-                            <p>
-                                Gambar Kerja
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ||
-                        request()->segment(1) == "konsultasi-pembimbing-guru" ? "menu-open" : "" }}">
-                        <a href="#" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" || request()->segment(1) == "konsultasi-pembimbing-guru" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-envelope"></i>
-                            <p>
-                                Konsultasi
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{url("konsultasi-pembimbing-dudi")}}" class="nav-link {{ request()->segment(1) == "konsultasi-pembimbing-dudi" ? "active" : "" }}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pembimbing DU/DI</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{url("penilaian")}}" class="nav-link {{ request()->segment(1) == "penilaian" ? "active" : "" }}">
-                            <i class="nav-icon fas fa-chart-pie"></i>
-                            <p>
-                                Penilaian
-                            </p>
-                        </a>
-                    </li>
-                @endif
+                @php
+                    }
+                }
+                @endphp
             </ul>
         </nav>
     </div>
 </aside>
+<script>
+    const url = '{{ request()->segment(1) }}'
+    const sub_menu = document.getElementById(`${url}_`).classList[1];
+    let menu;
+    @foreach ($arr_menu as $menu)
+        menu = '{{ str_replace(' ', '', str_replace('.', '', strtolower($menu['text']))) }}'
+        if (menu == sub_menu) {
+            $('#{{ str_replace(' ', '', str_replace('.', '', strtolower($menu['text']))) }}').addClass('menu-open');
+        }
+        @foreach ($menu['sub_menu'] as $submenu)
+            @if ($submenu['has_sub'])
+                let submenu = document.getElementById(`{{ str_replace(' ', '', str_replace('.', '', strtolower($submenu['text']))) }}`).classList[1];
+
+                menu = '{{ str_replace(' ', '', str_replace('.', '', strtolower($submenu['text']))) }}'
+                if (menu == sub_menu) {
+                    $('#{{ str_replace(' ', '', str_replace('.', '', strtolower($submenu['text']))) }}').addClass('menu-open');
+                    $(`#${submenu}`).addClass('menu-open');
+                }
+            @endif
+        @endforeach
+    @endforeach
+</script>
