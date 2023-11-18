@@ -33,10 +33,13 @@ class AuthController extends Controller
             return redirect('/')->with('error', 'Password salah!');
         }
 
+        $jenis_pengguna = DB::table('jenis_pengguna')->where('id_jenis_pengguna', $pengguna['id_jenis_pengguna'])->first();
+
         $request->session()->put([
             'nama_lengkap' => $pengguna['nama_lengkap'],
             'id_pengguna' => $pengguna['id_pengguna'],
-            'id_jenis_pengguna' => $pengguna['id_jenis_pengguna']
+            'id_jenis_pengguna' => $pengguna['id_jenis_pengguna'],
+            'role' => $jenis_pengguna->jenis_pengguna
         ]);
 
         return redirect('dashboard');

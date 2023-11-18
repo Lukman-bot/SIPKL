@@ -13,13 +13,18 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 @if ($pengguna->foto_profile != null || $pengguna->foto_profile != '')
-                    <img src="{{url("/img/profile/" . $pengguna->foto_profile)}}" class="img-circle elevation-2"/>
+                    <div style="background:center no-repeat url({{'/img/profile/' . $pengguna->foto_profile}}); background-size:cover; width:33.6px; height:33.6px;" class="img-circle elevation-2"></div>
                 @else
-                    <img src="{{Avatar::create(session()->get('nama_lengkap'))}}" class="img-circle elevation-2"/>
+                    <div style="background:center no-repeat url({{Avatar::create(session()->get('nama_lengkap'))}}); background-size:cover; width:33.6px; height:33.6px;" class="img-circle elevation-2"></div>
                 @endif
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{session()->get('nama_lengkap')}}</a>
+                <small style="color:white;">
+                    <a data-widget="control-sidebar"data-slide="true">
+                        {{session()->get('role')}}
+                    </a>
+                </small>
             </div>
         </div>
 
