@@ -64,7 +64,7 @@ class PenggunaController extends Controller
     {
         $data = [
             'title' => 'Form Pengguna',
-            'jenis_pengguna' => DB::table('jenis_pengguna')->get(),
+            'jenis_pengguna' => DB::table('jenis_pengguna')->whereNot('id_jenis_pengguna', 2)->get(),
             'data' => $this->model->find(base64_decode($id)),
         ];
 
