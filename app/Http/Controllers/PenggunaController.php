@@ -59,4 +59,71 @@ class PenggunaController extends Controller
                 ->make(true);
         }
     }
+
+    public function form(String $id = null)
+    {
+        $data = [
+            'title' => 'Form Pengguna',
+            'jenis_pengguna' => DB::table('jenis_pengguna')->get(),
+            'data' => $this->model->find(base64_decode($id)),
+        ];
+
+        return view('pengguna.form', $data);
+    }
+
+    public function store(Request $request)
+    {
+        $id = $request->get('id');
+
+        if ($id == null) {
+            $uniqueUsername = ['required', 'unique:pengguna'];
+        } else {
+            $uniqueUsername = $request->get('username') != $request->get('username_lama') ? ['unique:pengguna'] : ['required'];
+        }
+
+        $validate = $request->validate([
+            'username' => $uniqueUsername,
+            'nama_lengkap' => ['required'],
+            'jenis_kelamin' => ['required'],
+            'id_jenis_pengguna' => ['required']
+        ]);
+
+        if ($request->get('kata_kunci')) {
+            $validate['kata_kunci'] = Hash::make($request->get('kata_kunci'));
+        }
+
+        if ($request->get('gelar_depan')) {
+            $validate['gelar_depan'] = $request->get('gelar_depan');
+        }
+
+        if ($request->get('gelar_belakang')) {
+            $validate['gelar_belakang'] = $request->get('gelar_belakang');
+        }
+
+        if ($request->get('golongan_darah')) {
+            $validate['golongan_darah'] = $request->get('golongan_darah');
+        }
+
+        if ($request->get('catatan_kesehatan')) {
+            $validate['catatan_kesehatan'] = $request->get('catatan_kesehatan');
+        }
+
+        if ($request->get('alamat')) {
+            $validate['alamat'] = $request->get('alamat');
+        }
+
+        if ($id == null) {
+            $this->model->insert($validate);
+        } else {
+            $this->model->where('id_pengguna', $id)->update($validate);
+        }
+
+        return redirect('pengguna')->with('success', 'Berhasil menyimpan data pengguna');
+    }
+
+    public function destroy(Request $request)
+    {
+        $this->model->where('id_pengguna', $request->get('id'))->delete();
+        return response()->json(['status' => 'oke']);
+    }
 }

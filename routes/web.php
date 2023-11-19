@@ -29,6 +29,6 @@ Route::middleware('auth')->group(function() {
         Route::get('/form', [PenggunaController::class, 'form']);
         Route::get('/form/{id}', [PenggunaController::class, 'form']);
         Route::post('', [PenggunaController::class, 'store']);
-        Route::get('/delete/{id}', [PenggunaController::class, 'destroy']);
+        Route::post('/delete', [PenggunaController::class, 'destroy']);
     });
 });
