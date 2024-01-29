@@ -81,7 +81,7 @@ class SiswaController extends Controller
             'jenis_kelamin' => ['required'],
         ]);
 
-        $validate['id_jenis_pengguna'] = 2;
+        $validate['id_jenis_pengguna'] = '21';
         $validate['kata_kunci'] = Hash::make('123456789');
 
         if ($request->get('golongan_darah')) {
