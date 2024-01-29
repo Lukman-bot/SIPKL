@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class Pengguna extends Model
+class Siswa extends Model
 {
     use HasFactory;
 
@@ -19,7 +19,9 @@ class Pengguna extends Model
 
     public function getDatatables(Request $request)
     {
-        $this->dt = DB::table($this->table)->where('pengguna.id_jenis_pengguna', '11')->orderBy('pengguna.id_pengguna', 'desc');
+        $this->dt = DB::table($this->table)->orderBy('pengguna.id_pengguna', 'desc');
+        $this->dt->select('pengguna.*', 'detail_siswa.ttl');
+        $this->dt->leftjoin('detail_siswa', 'detail_siswa.id_pengguna', '=', 'pengguna.id_pengguna');
 
         if ($request->get('search_pengguna') != '') {
             $i = 0;
@@ -33,6 +35,8 @@ class Pengguna extends Model
                 $i++;
             }
         }
+
+        $this->dt->where('pengguna.id_jenis_pengguna', '21');
 
         return $this->dt;
     }

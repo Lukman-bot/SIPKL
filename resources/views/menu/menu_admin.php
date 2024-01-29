@@ -20,6 +20,13 @@ $arr_menu = array(
                 'icon'  => 'far fa-circle',
                 'has_sub' => false,
                 'sub_menu' => array()
+            ),
+            array(
+                'text'  => 'Siswa',
+                'url'   => 'siswa',
+                'icon'  => 'far fa-circle',
+                'has_sub' => false,
+                'sub_menu' => array()
             )
         )
     ),
